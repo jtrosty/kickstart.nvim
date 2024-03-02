@@ -1,5 +1,6 @@
 --[[
 
+Jon Trost custom
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -110,7 +111,7 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+--vim.opt.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -316,6 +317,14 @@ require('lazy').setup {
       --  If you already have a Nerd Font, or terminal set up with fallback fonts
       --  you can enable this
       -- { 'nvim-tree/nvim-web-devicons' }
+      {
+        'nvim-telescope/telescope-live-grep-args.nvim',
+        -- This will not install any breaking changes.
+        -- For major updates, this must be adjusted manually.
+        version = '^1.0.0',
+      },
+      { 'ThePrimeagen/harpoon' },
+      { 'ellisonleao/gruvbox.nvim', priority = 1000 },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -372,6 +381,7 @@ require('lazy').setup {
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>fg', ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -531,7 +541,7 @@ require('lazy').setup {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
         -- pyright = {},
         -- rust_analyzer = {},
@@ -721,12 +731,14 @@ require('lazy').setup {
     -- change the command in the config to whatever the name of that colorscheme is
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
+    'ellisonleao/gruvbox.nvim',
     'folke/tokyonight.nvim',
+    'navarasu/onedark.nvim',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- Load the colorscheme here
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight'
 
       -- You can configure highlights by doing something like
       vim.cmd.hi 'Comment gui=none'
@@ -781,7 +793,7 @@ require('lazy').setup {
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+        ensure_installed = { 'bash', 'c', 'cpp', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
@@ -817,5 +829,50 @@ require('lazy').setup {
   -- { import = 'custom.plugins' },
 }
 
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+
+-- My building Keybinds
+
+vim.keymap.set('n', '<C-b>', vim.cmd.make)
+vim.opt.makeprg = './script/macbuild.sh -d'
+
+vim.keymap.set('n', '<F2>', ':term ./build/core') --cpp run
+
+-- Harpoon keybindings:
+local mark = require 'harpoon.mark'
+local ui = require 'harpoon.ui'
+
+vim.keymap.set('n', '<leader>a', mark.add_file)
+vim.keymap.set('n', '<C-e>', ui.toggle_quick_menu)
+
+vim.keymap.set('n', '<leader>1', function()
+  ui.nav_file(1)
+end)
+vim.keymap.set('n', '<leader>2', function()
+  ui.nav_file(2)
+end)
+vim.keymap.set('n', '<leader>3', function()
+  ui.nav_file(3)
+end)
+vim.keymap.set('n', '<leader>4', function()
+  ui.nav_file(4)
+end)
+vim.keymap.set('n', '<leader>5', function()
+  ui.nav_file(5)
+end)
+vim.keymap.set('n', '<leader>6', function()
+  ui.nav_file(6)
+end)
+vim.keymap.set('n', '<leader>7', function()
+  ui.nav_file(7)
+end)
+vim.keymap.set('n', '<leader>8', function()
+  ui.nav_file(8)
+end)
+vim.keymap.set('n', '<leader>9', function()
+  ui.nav_file(9)
+end)
+
+vim.cmd.colorscheme 'gruvbox'
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

@@ -1,6 +1,8 @@
 --[[
 
 Jon Trost custom
+symbolic link used on mac
+ ln -s ~/.config/nvim/kickstart.nvim/init.lua ~/.config/nvim/
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================

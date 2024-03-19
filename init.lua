@@ -149,6 +149,12 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Tabs
+local TAB_WIDTH = 2
+vim.opt.tabstop = TAB_WIDTH
+vim.opt.shiftwidth = TAB_WIDTH
+vim.opt.expandtab = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -325,6 +331,13 @@ require('lazy').setup {
       },
       { 'ThePrimeagen/harpoon' },
       { 'ellisonleao/gruvbox.nvim', priority = 1000 },
+      {
+        'windwp/nvim-autopairs',
+        event = 'InsertEnter',
+        config = true,
+        -- use opts = {} for passing setup options
+        -- this is equalent to setup({}) function
+      },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that

@@ -42,6 +42,7 @@ require('mason-nvim-dap').setup {
   ensure_installed = {
     -- Update this to ensure that you have the debuggers for the langs you want
     'delve',
+    'codelldb',
   },
 }
 
@@ -70,8 +71,8 @@ dapui.setup {
 }
 
 -- Change breakpoint icons
--- vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
--- vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
+vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' })
+vim.api.nvim_set_hl(0, 'DapStop', { fg = '#ffcc00' })
 -- local breakpoint_icons = vim.g.have_nerd_font
 --     and { Breakpoint = '', BreakpointCondition = '', BreakpointRejected = '', LogPoint = '', Stopped = '' }
 --   or { Breakpoint = '●', BreakpointCondition = '⊜', BreakpointRejected = '⊘', LogPoint = '◆', Stopped = '⭔' }
@@ -93,3 +94,33 @@ require('dap-go').setup {
     detached = vim.fn.has 'win32' == 0,
   },
 }
+
+-- 1. Define the adapter pointing to Mason's codelldb installation
+dap.adapters.codelldb = {
+  type = 'server',
+  port = '${port}',
+  executable = {
+    -- Adjust this path if you are on Windows (append .cmd or .exe if required)
+    command = vim.fn.stdpath 'data' .. '/mason/bin/codelldb',
+    args = { '--port', '${port}' },
+  },
+}
+
+-- 2. Define the configuration for Rust files
+dap.configurations.rust = {
+  {
+    name = 'Launch file',
+    type = 'codelldb',
+    request = 'launch',
+    program = function()
+      -- Automatically compiles your project before launching the debugger
+      vim.fn.jobstart('cargo build')
+      
+      -- Prompts you to pick or paths out the executable binary 
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+  },
+}
+
